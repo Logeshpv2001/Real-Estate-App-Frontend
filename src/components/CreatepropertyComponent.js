@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 
-const CreateProperty = ({ history }) => {
+const CreateProperty = () => {
     const [formData, setFormData] = useState({
         type: '',
         location: '',
@@ -13,18 +14,24 @@ const CreateProperty = ({ history }) => {
     const { type, location, price, description } = formData;
 
     const { auth } = useContext(AuthContext);
+    // const token = localStorage.getItem('token');
+    const navigate = useNavigate();
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const onSubmit = async e => {
         e.preventDefault();
+        console.log(auth);
         try {
-            await axios.post('/api/properties', formData, {
+            await axios.post('/api/properties', formData,
+                 {
                 headers: {
                     'Authorization': `Bearer ${auth.token}`
                 }
-            });
-            history.push('/dashboard');
+                
+            }
+        );
+            navigate('/dashboard');
         } catch (err) {
             console.error(err);
         }

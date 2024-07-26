@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const Register = ({ history }) => {
+const Register = ( ) => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: '',
     });
-
+ const navigate= useNavigate();
     const { name, email, password } = formData;
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,8 +16,9 @@ const Register = ({ history }) => {
     const onSubmit = async e => {
         e.preventDefault();
         try {
-            await axios.post('/api/agents/register', formData);
-            history.push('/login');
+            await axios.post('/api/agents/register', formData)
+            // .then(result => console.log(result))
+            navigate('/login');
         } catch (err) {
             console.error(err);
         }

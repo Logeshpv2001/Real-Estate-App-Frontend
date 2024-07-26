@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const EditProperty = ({ match, history }) => {
     const [formData, setFormData] = useState({
@@ -13,39 +14,39 @@ const EditProperty = ({ match, history }) => {
     const { type, location, price, description } = formData;
 
     const { auth } = useContext(AuthContext);
-
-    useEffect(() => {
-        const fetchProperty = async () => {
-            try {
-                const res = await axios.get(`/api/properties/${match.params.id}`, {
-                    headers: {
-                        'Authorization':` Bearer ${auth.token}`
-                    }
-                });
-                setFormData({
-                    type: res.data.type,
-                    location: res.data.location,
-                    price: res.data.price,
-                    description: res.data.description,
-                });
-            } catch (err) {
-                console.error(err);
-            }
-        };
-        fetchProperty();
-    }, [auth.token, match.params.id]);
+const navigate = useNavigate();
+    // useEffect(() => {
+    //     const fetchProperty = async () => {
+    //         try {
+    //             const res = await axios.get(`/api/properties/${match.params.id}`, {
+    //                 headers: {
+    //                     'Authorization':` Bearer ${auth.token}`
+    //                 }
+    //             });
+    //             setFormData({
+    //                 type: res.data.type,
+    //                 location: res.data.location,
+    //                 price: res.data.price,
+    //                 description: res.data.description,
+    //             });
+    //         } catch (err) {
+    //             console.error(err);
+    //         }
+    //     };
+    //     fetchProperty();
+    // }, [auth.token, match.params.id]);
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const onSubmit = async e => {
         e.preventDefault();
         try {
-            await axios.put(`/api/properties/${match.params.id}`, formData, {
+            await axios.put(`/api/properties/${match.id}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${auth.token}`
                 }
             });
-            history.push('/dashboard');
+            navigate.push('/dashboard');
         } catch (err) {
             console.error(err);
         }
